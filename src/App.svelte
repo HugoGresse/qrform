@@ -1,9 +1,18 @@
+<!-- App.svelte -->
 <script>
+    import { Router, Route } from "svelte-routing"
+    import Home from './lib/Home.svelte'
+    import Form from './form/Form.svelte'
+
+    export let url = ""
 </script>
 
-<main>
-  <p>
-    QRFOrm.fr fournit une solution de formulaire pour les pharmaciens, en respect avec les données des patients, hébergé en France, sans suivit utilisateur.
-  </p>
 
-</main>
+<Router url="{url}">
+    <div>
+        <Route path="f/:id" component="{Form}"/>
+        <Route path="/">
+            <Home/>
+        </Route>
+    </div>
+</Router>
