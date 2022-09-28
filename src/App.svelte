@@ -10,7 +10,7 @@
 
 <Router url="{url}">
     <div>
-        <Route path="f/:id" component="{Form}"/>
+        <Route path="f/:id" let:params component="{Form}"/>
         <Route path="/">
             <Home/>
         </Route>
