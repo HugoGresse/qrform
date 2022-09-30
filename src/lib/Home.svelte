@@ -1,5 +1,8 @@
 <script>
     import { Link } from "svelte-routing"
+
+
+    let contactId = import.meta.env.VITE_CONTACT_ID
 </script>
 
 
@@ -10,6 +13,14 @@
     </p>
 
     <nav>
-        <Link to="/f/1">Contact us</Link>
+        <Link to="/f/{contactId}">Nous contacter</Link>
     </nav>
 </main>
+
+
+<style>
+    p {
+        color: #111;
+        max-width: 400px;
+    }
+</style>

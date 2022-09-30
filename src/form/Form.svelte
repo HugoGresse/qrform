@@ -8,6 +8,8 @@
     const FIELD_EMAIL = 3
     const FIELD_TEXT = 5
 
+    const FIELD_FILE = [FIELD_FILE_ANY]
+
     export let id
     let fields = []
     let title
@@ -18,7 +20,7 @@
 
     const getForm = async () => {
         const response = await fetch(`${API_URL}items/form/?fields=fields.*,title,form_type.*&filter[uuid][_eq]=${id}`)
-        const responseJson = JSON.parse(await response.text()).data
+        const responseJson = JSON.parse(await response.text()).data[0]
         fields = responseJson.fields
         title = responseJson.title
 
@@ -30,9 +32,14 @@
 
         const formData = new FormData()
         fields.forEach((field) => {
+            if(FIELD_FILE.includes(field.field_id)) {
+                console.log(values[field.id][0])
+                formData.append(`${field.id}`, values[field.id][0])
+            } else {
                 formData.append(field.id, values[field.id])
+            }
         })
-        formData.append('user', 'hubot')
+        formData.append('formId', id)
 
         const response = await fetch(SUBMIT_URL, {
             method: 'POST',
@@ -82,9 +89,11 @@
 
         <br/>
 
-        <Button color="secondary" on:click={onSubmit} touch type="submit" variant="outlined">
-            <Label>Envoyer</Label>
-        </Button>
+        {#if fields.length}
+            <Button color="secondary" on:click={onSubmit} touch type="submit" variant="outlined">
+                <Label>Envoyer</Label>
+            </Button>
+        {/if}
 
     </form>
 </main>
