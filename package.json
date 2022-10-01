@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "svelte-material-ui": "^6.2.0",
+    "svelte-qrcode": "^1.0.0",
     "svelte-routing": "^1.6.0"
   }
 }
