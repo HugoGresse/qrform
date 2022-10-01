@@ -140,7 +140,7 @@
                     <CircularProgress style="height: 24px; width: 24px;" indeterminate/>
                 {/if}
             </Button>
-        {:else if STATUS.SENT_SUCCESS}
+        {:else if status === STATUS.SENT_SUCCESS}
             <h2>Formulaire envoyé 🎉</h2>
             <Button color="secondary" on:click={() => location.reload()} touch>
                 <Label>Re-remplir</Label>
