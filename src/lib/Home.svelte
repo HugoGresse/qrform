@@ -9,7 +9,7 @@
 <main>
     <p>
         QRForm.fr fournit une solution de formulaire pour les pharmaciens, en respect avec les données des patients,
-        hébergé en France, sans suivit utilisateur.
+        hébergé en France, sans suivi utilisateur.
     </p>
 
     <nav>
