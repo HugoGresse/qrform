@@ -23,23 +23,27 @@
 
     const loadQRCode = async () => {
         loadingQRCode = true
+
         const options = {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
                 'X-RapidAPI-Key': import.meta.env.VITE_RAPIDAPI_KEY,
-                'X-RapidAPI-Host': 'qrcodestyleapi.p.rapidapi.com'
+                'X-RapidAPI-Host': 'qrcode3.p.rapidapi.com'
             },
-            body: `{"width":600,"height":600,"data":"https://qrform.fr/f/${id}","margin":2,"qrOptions":{"typeNumber":"0","mode":"Byte","errorCorrectionLevel":"Q"},"imageOptions":{"hideBackgroundDots":true,"imageSize":0.4,"margin":0},"dotsOptions":{"type":"rounded","color":"#000000","gradient":null},"backgroundOptions":{"color":"#ffffff"},"image":null,"dotsOptionsHelper":{"colorType":{"single":true,"gradient":false},"gradient":{"linear":true,"radial":false,"color1":"#6a1a4c","color2":"#6a1a4c","rotation":"0"}},"cornersSquareOptions":{"type":"","color":"#018786"},"cornersSquareOptionsHelper":{"colorType":{"single":true,"gradient":false},"gradient":{"linear":true,"radial":false,"color1":"#000000","color2":"#000000","rotation":"0"}},"cornersDotOptions":{"type":"","color":"#010000"},"cornersDotOptionsHelper":{"colorType":{"single":true,"gradient":false},"gradient":{"linear":true,"radial":false,"color1":"#000000","color2":"#000000","rotation":"0"}},"backgroundOptionsHelper":{"colorType":{"single":true,"gradient":false},"gradient":{"linear":true,"radial":false,"color1":"#ffffff","color2":"#ffffff","rotation":"0"}}}`
+            body: `{"data":"https://qrform.fr/f/${id}","style":{"module":{"color":"black","shape":"horizontal_lines"},"inner_eye":{"shape":"lightround"},"outer_eye":{"shape":"lightround", "color":"#018786"},"background":{}},"size":{"width":300,"quiet_zone":4,"error_correction":"M"},"output":{"filename":"qrcode","format":"png"}}`
         }
 
-        fetch('https://qrcodestyleapi.p.rapidapi.com/generate', options)
-            .then(response => response.json())
+        fetch('https://qrcode3.p.rapidapi.com/qrcode/text', options)
+            .then(response => response.blob())
             .then(response => {
                 loadingQRCode = false
-                qrCode = response.png
+                qrCode = URL.createObjectURL(response)
             })
-            .catch(err => error = "Failed to generate QRCode")
+            .catch(err => {
+                loadingQRCode = false
+                error = "Failed to generate QRCode"
+            })
     }
 
     const print = () => {
@@ -65,7 +69,8 @@
 
     {#if qrCode}
         <div id="print">
-            <div style="width:100%;text-align: center; margin:0 auto; font-family: sans-serif; justify-content: center; align-items: center; align-content: center; display: flex; flex-direction: column;">
+            <div
+                style="width:100%;text-align: center; margin:0 auto; font-family: sans-serif; justify-content: center; align-items: center; align-content: center; display: flex; flex-direction: column;">
                 <h1 style="width:100%;text-align: center; margin:0 auto; font-family: sans-serif;">{formTitle}</h1>
                 <br/>
                 <img src="{qrCode}" width="300" height="300" alt="QRCode"/>
@@ -75,6 +80,8 @@
                 variant="outlined">
             <Label>Imprimer</Label>
         </Button>
+    {:else}
+        <h1>{formTitle}</h1>
     {/if}
 
     <br/>
