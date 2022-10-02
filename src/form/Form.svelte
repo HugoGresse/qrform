@@ -1,6 +1,8 @@
 <script>
     import Textfield from '@smui/textfield'
     import HelperText from '@smui/textfield/helper-text'
+    import Checkbox from '@smui/checkbox'
+    import FormField from '@smui/form-field'
     import Icon from '@smui/textfield/icon'
     import Button, { Label } from '@smui/button'
     import CircularProgress from '@smui/circular-progress'
@@ -16,7 +18,9 @@
 
     const FIELD_FILE_ANY = 1
     const FIELD_EMAIL = 3
+    const FIELD_DOB = 4
     const FIELD_TEXT = 5
+    const FIELD_CHECKBOX = 6
 
     const FIELD_FILE = [FIELD_FILE_ANY]
 
@@ -45,14 +49,19 @@
         fields = responseJson.fields
         title = responseJson.title
 
-        fields.sort((a, b) => a.order - b.order).forEach(field => values[field.id] = null)
+        fields.sort((a, b) => a.order - b.order).forEach(field => {
+            if(field.field_id === FIELD_CHECKBOX) {
+                values[field.id] = false
+            } else {
+                values[field.id] = null
+            }
+        })
         status = STATUS.LOADED
     }
 
     const onSubmit = async (event) => {
         error = null
         status = STATUS.SENDING
-        event.preventDefault()
 
         const formData = new FormData()
         fields.forEach((field) => {
@@ -112,6 +121,19 @@
                     <Icon class="material-icons" slot="leadingIcon">abc</Icon>
                     <HelperText slot="helper">Text libre</HelperText>
                 </Textfield>
+            {:else if field.field_id === FIELD_DOB}
+                <Textfield variant="filled" bind:value={values[field.id]} label="{field.label}" type="date"
+                           style="width: 100%;"
+                           helperLine$style="width: 100%;"
+                >
+                    <Icon class="material-icons" slot="leadingIcon">event</Icon>
+                    <HelperText slot="helper">Date de naissance</HelperText>
+                </Textfield>
+            {:else if field.field_id === FIELD_CHECKBOX}
+                <FormField  align="end">
+                    <span slot="label">{field.label}</span>
+                    <Checkbox bind:checked={values[field.id]} touch/>
+                </FormField>
             {:else if field.field_id === FIELD_FILE_ANY}
                 <div class="hide-file-ui">
                     <Textfield variant="filled" bind:files={values[field.id]} label="{field.label}" type="file"
