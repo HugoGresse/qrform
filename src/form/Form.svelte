@@ -17,12 +17,13 @@
     }
 
     const FIELD_FILE_ANY = 1
+    const FIELD_CAMERA = 2
     const FIELD_EMAIL = 3
     const FIELD_DOB = 4
     const FIELD_TEXT = 5
     const FIELD_CHECKBOX = 6
 
-    const FIELD_FILE = [FIELD_FILE_ANY]
+    const FIELD_FILE = [FIELD_FILE_ANY, FIELD_CAMERA]
 
     export let id
     let status = STATUS.LOADING
@@ -60,6 +61,7 @@
     }
 
     const onSubmit = async (event) => {
+        event.preventDefault()
         error = null
         status = STATUS.SENDING
 
@@ -134,6 +136,21 @@
                     <span slot="label">{field.label}</span>
                     <Checkbox bind:checked={values[field.id]} touch/>
                 </FormField>
+            {:else if field.field_id === FIELD_CAMERA}
+                <div class="hide-file-ui">
+                    <Textfield variant="filled"
+                               bind:files={values[field.id]}
+                               label="{field.label}"
+                               type="file"
+                               input$accept="image/*"
+                               input$capture
+                               style="width: 100%;"
+                               helperLine$style="width: 100%;"
+
+                    >
+                        <Icon class="material-icons" slot="leadingIcon">add_a_photo</Icon>
+                    </Textfield>
+                </div>
             {:else if field.field_id === FIELD_FILE_ANY}
                 <div class="hide-file-ui">
                     <Textfield variant="filled" bind:files={values[field.id]} label="{field.label}" type="file"
@@ -164,7 +181,10 @@
             </Button>
         {:else if status === STATUS.SENT_SUCCESS}
             <h2>Formulaire envoyé 🎉</h2>
-            <Button color="secondary" on:click={() => location.reload()} touch>
+            <Button color="secondary" on:click={(event) => {
+                event.preventDefault()
+                location.reload()
+            }} touch>
                 <Label>Re-remplir</Label>
             </Button>
         {/if}
