@@ -108,7 +108,7 @@
     <form action="{SUBMIT_URL}" method="post">
         {#each fields as field}
             {#if field.field_id === FIELD_EMAIL}
-                <Textfield variant="filled" bind:value={values[field.id]} label="{field.label}" type="email"
+                <Textfield variant="filled" bind:value={values[field.id]} label="{field.label + (field.required?' (requis)' : '')}" type="email"
                            style="width: 100%;"
                            helperLine$style="width: 100%;"
                 >
@@ -116,7 +116,7 @@
                     <HelperText slot="helper">Saissisez votre email</HelperText>
                 </Textfield>
             {:else if field.field_id === FIELD_TEXT}
-                <Textfield variant="filled" bind:value={values[field.id]} label="{field.label}" type="text"
+                <Textfield variant="filled" bind:value={values[field.id]} label="{field.label + (field.required?' (requis)' : '')}" type="text"
                            style="width: 100%;"
                            helperLine$style="width: 100%;"
                 >
@@ -124,7 +124,7 @@
                     <HelperText slot="helper">Text libre</HelperText>
                 </Textfield>
             {:else if field.field_id === FIELD_DOB}
-                <Textfield variant="filled" bind:value={values[field.id]} label="{field.label}" type="date"
+                <Textfield variant="filled" bind:value={values[field.id]} label="{field.label + (field.required?' (requis)' : '')}" type="date"
                            style="width: 100%;"
                            helperLine$style="width: 100%;"
                 >
@@ -133,14 +133,14 @@
                 </Textfield>
             {:else if field.field_id === FIELD_CHECKBOX}
                 <FormField  align="end">
-                    <span slot="label">{field.label}</span>
+                    <span slot="label">{field.label + (field.required?' (requis)' : '')}</span>
                     <Checkbox bind:checked={values[field.id]} touch/>
                 </FormField>
             {:else if field.field_id === FIELD_CAMERA}
                 <div class="hide-file-ui">
                     <Textfield variant="filled"
                                bind:files={values[field.id]}
-                               label="{field.label}"
+                               label="{field.label + (field.required?' (requis)' : '')}"
                                type="file"
                                input$accept="image/*"
                                input$capture
