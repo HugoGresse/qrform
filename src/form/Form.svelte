@@ -38,7 +38,7 @@
     const getForm = async () => {
         error = null
         status = STATUS.LOADING
-        const response = await fetch(`${API_URL}items/form/?fields=fields.*,title,form_type.*&filter[uuid][_eq]=${id}`)
+        const response = await fetch(`${API_URL}items/form/?fields=status,fields.*,title,form_type.*&filter[uuid][_eq]=${id}`)
         if (response.ok) {
             status = STATUS.LOADED
         } else {
@@ -47,6 +47,13 @@
             return
         }
         const responseJson = JSON.parse(await response.text()).data[0]
+
+        if(responseJson.status === "disabled") {
+            error = "Formulaire désactivé. Contactez l'équipe QRForm pour le réactiver."
+            status = STATUS.LOAD_ERROR
+            return
+        }
+
         fields = responseJson.fields
         title = responseJson.title
 
