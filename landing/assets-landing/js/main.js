@@ -340,7 +340,7 @@
 				_self.closest('div').find('button[type="submit"]').attr('disabled', 'disabled');
 
 				$.ajax({
-					url: 'https://qrform.fr/sendEmail.php',
+					url: '/sendEmail.php',
 					type: "post",
                     processData: false,
                     contentType: false,
