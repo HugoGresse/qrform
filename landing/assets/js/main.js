@@ -13,7 +13,7 @@
             this._body = $('body'),
             this._html = $('html')
         },
-        
+
         methods: function (e) {
             doobJs.smothScroll();
             doobJs.backToTopInit();
@@ -137,7 +137,7 @@
             });
         },
 
-        
+
 
         slickSliderActivation: function () {
             $('.testimonial-activation').not('.slick-initialized').slick({
@@ -330,26 +330,30 @@
         contactForm: function () {
             $('.rainbow-dynamic-form').on('submit', function (e) {
 				e.preventDefault();
+                var data = new FormData(this);
+                data.append('formId', '7a9f1848-eeae-49a4-83c9-d5db8198a9c2')
+
 				var _self = $(this);
 				var __selector = _self.closest('input,textarea');
 				_self.closest('div').find('input,textarea').removeAttr('style');
 				_self.find('.error-msg').remove();
 				_self.closest('div').find('button[type="submit"]').attr('disabled', 'disabled');
-				var data = $(this).serialize();
+
 				$.ajax({
-					url: 'mail.php',
+					url: 'https://qrform.fr/sendEmail.php',
 					type: "post",
-					dataType: 'json',
+                    processData: false,
+                    contentType: false,
 					data: data,
 					success: function (data) {
 						_self.closest('div').find('button[type="submit"]').removeAttr('disabled');
 						if (data.code == false) {
 							_self.closest('div').find('[name="' + data.field + '"]');
-							_self.find('.rainbow-btn').after('<div class="error-msg"><p>*' + data.err + '</p></div>');
+							_self.find('.rainbow-btn').after('<div class="error-msg"><p>Erreur: ' + data.err + '</p></div>');
 						} else {
 							$('.error-msg').hide();
 							$('.form-group').removeClass('focused');
-							_self.find('.rainbow-btn').after('<div class="success-msg"><p>' + data.success + '</p></div>');
+							_self.find('.rainbow-btn').after('<div class="success-msg"><p>Message envoyé !</p></div>');
 							_self.closest('div').find('input,textarea').val('');
 
 							setTimeout(function () {
@@ -389,11 +393,11 @@
                 } else{
                     $('body').addClass('active-light-mode');
                 }
-                
+
             }
         },
 
-        
+
 
     }
     doobJs.i();
