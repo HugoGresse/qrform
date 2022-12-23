@@ -6,15 +6,7 @@
     import Icon from '@smui/textfield/icon'
     import Button, { Label } from '@smui/button'
     import CircularProgress from '@smui/circular-progress'
-
-    const STATUS = {
-        LOADING: 0,
-        LOADED: 1,
-        LOAD_ERROR: 2,
-        SENDING: 3,
-        SENT_SUCCESS: 4,
-        SENT_ERROR: 5,
-    }
+    import { STATUS } from '../utils/Status.js'
 
     const FIELD_FILE_ANY = 1
     const FIELD_CAMERA = 2
