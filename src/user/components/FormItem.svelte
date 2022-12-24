@@ -6,8 +6,9 @@
 </script>
 
 
-<Link to="">
-    <button class="container">
+<Link to="/user/forms/{form.uuid}">
+    <button class="container"
+            style="border-color: {false ? '#008A87': 'transparent'}">
         <div class="left">
             <h4>{form.title}</h4>
             <span>Destination: {form.email_to}</span>
@@ -16,6 +17,7 @@
 
         <Icon class="material-icons" slot="chevron-right">chevron_right</Icon>
     </button>
+
 </Link>
 
 <style>
