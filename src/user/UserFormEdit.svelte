@@ -116,7 +116,7 @@
                     />
                 <FormMetaField
                     required="{field.required}"
-                    label=""
+                    label="Intitulé du champ"
                     value={field.label || ""}
                     type="{field.field_id}"
                 />
