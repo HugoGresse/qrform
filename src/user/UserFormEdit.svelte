@@ -1,6 +1,6 @@
 <script>
     import CircularProgress from '@smui/circular-progress'
-    import { getUserForms, loadFormsAction, userForms } from './core/formStore.js'
+    import { getUserForms, loadFormsAction, updateFormAction, userForms } from './core/formStore.js'
     import UserHeader from './components/UserHeader.svelte'
     import FormMetaField from './components/FormMetaField.svelte'
     import { FIELD_TEXT } from '../form/FieldTypes.js'
@@ -12,23 +12,23 @@
     import FormField from '@smui/form-field'
     import Checkbox from '@smui/checkbox'
 
-
-    const flipDurationMs = 200
-
     export let id
 
-    const UPDATE_URL = import.meta.env.VITE_USER_FORM_UPDATE
-
+    const flipDurationMs = 200
     let loading = false
     let error = null
     let form = null
-    let availableFields = []
+    let initialForm = null
+
+    $: hasChanged = form ? JSON.stringify(form) !== JSON.stringify(initialForm) : false
 
     userForms.subscribe(value => {
         form = value.find(f => f.uuid = id)
         if (form) {
-            console.log("form loaded", form)
             loading = false
+            if (!initialForm) {
+                initialForm = JSON.parse(JSON.stringify(form)) // deep clone..
+            }
         }
     })
 
@@ -47,7 +47,7 @@
             form.fields = []
         }
         form.fields = [...form.fields, {
-            id: Date.now(),
+            id: "new-" + Date.now(),
             field_id: FIELD_TEXT,
             form_id: form.id,
             label: "Nom du champ",
@@ -60,12 +60,20 @@
         form.fields = form.fields.filter(f => f.id !== formFieldId)
     }
 
-    function handleSort(e) {
+    const handleSort = (e) => {
         form.fields = e.detail.items
+    }
+
+    const save = async(form) => {
+        loading = true
+        const results = await updateFormAction(form)
+        // error = results.error
+        loading = false
     }
 
     console.log(form)
     // TODO: new : ajout de form_field + update du form
+    // TODO : upfate order when saving
 
     load()
 </script>
@@ -82,48 +90,54 @@
     {/if}
 
     {#if form}
-        <FormMetaField
-            label="Titre du formulaire"
-            required="true"
-            type="text"
-            value="{form.title}"
-            icon="title"
-        />
+        <div class="row bottomMargin">
+            <FormMetaField
+                label="Titre du formulaire"
+                required="true"
+                type="text"
+                value="{form.title}"
+                icon="title"
+            />
+        </div>
 
-        <FormMetaField
-            label="Sujet de l'email"
-            required="true"
-            type="text"
-            value="{form.email_title}"
-            icon="subject"
-        />
+        <div class="row bottomMargin">
+            <FormMetaField
+                label="Sujet de l'email"
+                required="true"
+                type="text"
+                value="{form.email_title}"
+                icon="subject"
+            />
+        </div>
 
-        <FormMetaField
-            label="Destination de l'email"
-            disabled="true"
-            required="true"
-            type="email"
-            value="{form.email_to}"
-            icon="contact_mail"
-        />
+        <div class="row bottomMargin">
+            <FormMetaField
+                label="Destination de l'email"
+                disabled="true"
+                required="true"
+                type="email"
+                value="{form.email_to}"
+                icon="contact_mail"
+            />
+        </div>
 
         <h4>Champs du formulaires :</h4>
 
-        <section use:dndzone={{items: form.fields, flipDurationMs}} on:consider={handleSort} on:finalize={handleSort} >
+        <section use:dndzone={{items: form.fields, flipDurationMs}} on:consider={handleSort} on:finalize={handleSort}>
             {#each form.fields as field(field.id)}
                 <div animate:flip={{duration:flipDurationMs}}>
-                    <div class="row" >
+                    <div class="row">
                         <IconButton class="material-icons" disabled>
                             drag_handle
                         </IconButton>
                         <FieldTypeSelect
-                            value={field.field_id}
+                            bind:value={field.field_id}
                             label="Type"
                         />
                         <FormMetaField
                             required="{field.required}"
                             label="Intitulé du champ"
-                            value={field.label || ""}
+                            bind:value={field.label}
                             type="{field.field_id}"
                         />
                         <IconButton
@@ -134,13 +148,11 @@
                         </IconButton>
                     </div>
                     <div class="subRow">
-
-                        <FormField  align="end">
+                        <FormField align="end">
                             <span slot="label">Champs requis :</span>
                             <Checkbox bind:checked={field.required} touch/>
                         </FormField>
                     </div>
-
                 </div>
             {/each}
         </section>
@@ -152,12 +164,11 @@
                 <Label>Ajouter un champ</Label>
             </Button>
 
-            <Button color="secondary" on:click={addNewField} touch
-                    variant="outlined">
+            <Button color="secondary" disabled={!hasChanged || loading} on:click={() => save(form)} touch
+                    variant="raised">
                 <Icon class="material-icons">save</Icon>
                 <Label>Sauvegarder</Label>
             </Button>
-
         </div>
     {/if}
 </main>
@@ -165,6 +176,8 @@
 <style>
     main {
         min-height: 100vh;
+        width: calc(100vw - 4rem);
+        max-width: calc(1024px - 4rem);
     }
 
     p, h4 {
@@ -175,6 +188,10 @@
         display: flex;
         flex-wrap: wrap;
     }
+    .row.bottomMargin {
+        margin-bottom: 12px;
+    }
+
     .subRow {
         margin-top: -12px;
     }
