@@ -3,10 +3,17 @@
     import { getUserForms, loadFormsAction, userForms } from './core/formStore.js'
     import UserHeader from './components/UserHeader.svelte'
     import FormMetaField from './components/FormMetaField.svelte'
-    import { FIELD_TEXT, FIELDS, getFieldDescs } from '../form/FieldTypes.js'
+    import { FIELD_TEXT } from '../form/FieldTypes.js'
     import Button, { Label, Icon } from '@smui/button'
-    import IconButton from '@smui/icon-button';
+    import IconButton from '@smui/icon-button'
     import FieldTypeSelect from './components/FieldTypeSelect.svelte'
+    import { dndzone } from 'svelte-dnd-action'
+    import { flip } from 'svelte/animate'
+    import FormField from '@smui/form-field'
+    import Checkbox from '@smui/checkbox'
+
+
+    const flipDurationMs = 200
 
     export let id
 
@@ -33,38 +40,31 @@
             error = results.error
             loading = false
         }
-        // Not needed for now
-        // const fieldsResults = await loadFieldsAction()
-        // if(fieldsResults.success) {
-        //     availableFields = fieldsResults.data
-        // }
     }
 
     const addNewField = () => {
         if (!form.fields) {
             form.fields = []
         }
-        form.fields.push({
+        form.fields = [...form.fields, {
+            id: Date.now(),
             field_id: FIELD_TEXT,
             form_id: form.id,
-            label: "Nom du champ (TODO)",
+            label: "Nom du champ",
             order: form.fields[form.fields.length - 1]?.order + 1 || 1,
             required: false
-        })
+        }]
     }
 
     const removeField = (formFieldId) => {
-
+        form.fields = form.fields.filter(f => f.id !== formFieldId)
     }
 
-    const changeFieldType = () => {
-
+    function handleSort(e) {
+        form.fields = e.detail.items
     }
 
     console.log(form)
-
-    // TODO: édition des infos des champs + delete
-    // TODO: reorder
     // TODO: new : ajout de form_field + update du form
 
     load()
@@ -108,25 +108,42 @@
         />
 
         <h4>Champs du formulaires :</h4>
-        {#each form.fields as field}
-            <div class="row">
-                <FieldTypeSelect
-                    value={field.field_id}
-                    label="Type"
-                    />
-                <FormMetaField
-                    required="{field.required}"
-                    label="Intitulé du champ"
-                    value={field.label || ""}
-                    type="{field.field_id}"
-                />
-                <IconButton
-                    class="material-icons"
-                    on:click={() => removeField(field.id)}
-                    style="margin-left: 12px; color: #000; border: 1px solid #008A87;"
-                >delete</IconButton>
-            </div>
-        {/each}
+
+        <section use:dndzone={{items: form.fields, flipDurationMs}} on:consider={handleSort} on:finalize={handleSort} >
+            {#each form.fields as field(field.id)}
+                <div animate:flip={{duration:flipDurationMs}}>
+                    <div class="row" >
+                        <IconButton class="material-icons" disabled>
+                            drag_handle
+                        </IconButton>
+                        <FieldTypeSelect
+                            value={field.field_id}
+                            label="Type"
+                        />
+                        <FormMetaField
+                            required="{field.required}"
+                            label="Intitulé du champ"
+                            value={field.label || ""}
+                            type="{field.field_id}"
+                        />
+                        <IconButton
+                            class="material-icons"
+                            on:click={() => removeField(field.id)}
+                            style="margin-left: 12px; color: #000; border: 1px solid #008A87;"
+                        >delete
+                        </IconButton>
+                    </div>
+                    <div class="subRow">
+
+                        <FormField  align="end">
+                            <span slot="label">Champs requis :</span>
+                            <Checkbox bind:checked={field.required} touch/>
+                        </FormField>
+                    </div>
+
+                </div>
+            {/each}
+        </section>
 
         <div class="bottomRow">
             <Button color="secondary" on:click={addNewField} touch
@@ -156,6 +173,10 @@
 
     .row {
         display: flex;
+        flex-wrap: wrap;
+    }
+    .subRow {
+        margin-top: -12px;
     }
 
     .bottomRow {
@@ -163,4 +184,7 @@
         justify-content: space-between;
     }
 
+    section {
+        transition: all 0.2s;
+    }
 </style>

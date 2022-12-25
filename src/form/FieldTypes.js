@@ -22,9 +22,9 @@ export const FIELDS = [
         value: FIELD_DOB,
         desc: "Date de naissance"
     },{
-        name: "Text",
+        name: "Texte",
         value: FIELD_TEXT,
-        desc: "Text libre"
+        desc: "Texte libre"
     },{
         name: "Case à cocher",
         value: FIELD_CHECKBOX,

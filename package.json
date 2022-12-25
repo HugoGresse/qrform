@@ -13,11 +13,12 @@
     "@smui/checkbox": "^6.1.4",
     "@smui/circular-progress": "^6.1.4",
     "@smui/form-field": "^6.1.4",
-    "@smui/textfield": "^6.1.4",
     "@smui/icon-button": "^6.1.4",
     "@smui/select": "^6.1.4",
+    "@smui/textfield": "^6.1.4",
     "@sveltejs/vite-plugin-svelte": "^1.0.2",
     "svelte": "^3.49.0",
+    "svelte-dnd-action": "^0.9.22",
     "vite": "^3.1.0"
   },
   "dependencies": {

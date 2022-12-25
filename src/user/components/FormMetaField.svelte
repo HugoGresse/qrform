@@ -1,8 +1,6 @@
 <script>
-
     import Textfield from '@smui/textfield'
     import HelperText from '@smui/textfield/helper-text'
-    import Icon from '@smui/textfield/icon'
 
     export let value
     export let label
@@ -16,7 +14,7 @@
 
 <Textfield variant="filled" bind:value={value} label="{label + (required?' (requis)' : '')}" type={type}
            disabled="{disabled}"
-           style="width: 100%; margin-bottom: 12px;"
+           style="flex: 1; min-width: 200px;"
            helperLine$style="width: 100%;"
 >
     {#if helperText}
