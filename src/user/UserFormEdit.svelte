@@ -67,20 +67,18 @@
     const save = async(form) => {
         loading = true
         const results = await updateFormAction(form)
-        // error = results.error
+        // TODO : error
         loading = false
     }
 
-    console.log(form)
-    // TODO: new : ajout de form_field + update du form
-    // TODO : upfate order when saving
+    // TODO : update order when saving on frontend
 
     load()
 </script>
 
 
 <main>
-    <UserHeader title="Modification du formulaire" backText="Liste des formulaires"/>
+    <UserHeader title="Modification du formulaire" backText="Liste des formulaires" forwardText="Voir le formulaire" forwardLink="https://qrform.fr/f/{id}"/>
 
     {#if loading}
         <CircularProgress style="height: 24px; width: 24px;" indeterminate/>
