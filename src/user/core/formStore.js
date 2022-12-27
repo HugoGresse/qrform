@@ -56,13 +56,13 @@ export const updateFormAction = async (form) => {
 
     if (response.ok) {
         const text = await response.text()
-        if(text === "ok") {
+        if(text === "\"ok\"") {
             return await loadFormsAction()
         }
 
         return {
             success: false,
-            error: "Erreur lors de la récupération des fomulaires, reconnectez-vous."
+            error: "Erreur lors de la récupération des fomulaires, reconnectez-vous. " + text
         }
     }
     return {

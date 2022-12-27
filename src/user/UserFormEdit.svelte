@@ -64,21 +64,28 @@
         form.fields = e.detail.items
     }
 
-    const save = async(form) => {
+    const save = async (form) => {
         loading = true
+        error = null
+        form.fields = form.fields.map((f, index) => {
+            console.log("", index)
+            f.order = index
+            return f
+        })
         const results = await updateFormAction(form)
-        // TODO : error
         loading = false
+        if (!results.success) {
+            error = results.error
+        }
     }
-
-    // TODO : update order when saving on frontend
 
     load()
 </script>
 
 
 <main>
-    <UserHeader title="Modification du formulaire" backText="Liste des formulaires" forwardText="Voir le formulaire" forwardLink="https://qrform.fr/f/{id}"/>
+    <UserHeader title="Modification du formulaire" backText="Liste des formulaires" forwardText="Voir le formulaire"
+                forwardLink="https://qrform.fr/f/{id}"/>
 
     {#if loading}
         <CircularProgress style="height: 24px; width: 24px;" indeterminate/>
@@ -121,7 +128,7 @@
 
         <h4>Champs du formulaires :</h4>
 
-        <section use:dndzone={{items: form.fields, flipDurationMs}} on:consider={handleSort} on:finalize={handleSort}>
+        <section use:dndzone={{items: form.fields, flipDurationMs, dropTargetStyle: {}}} on:consider={handleSort} on:finalize={handleSort}>
             {#each form.fields as field(field.id)}
                 <div animate:flip={{duration:flipDurationMs}}>
                     <div class="row">
@@ -186,6 +193,7 @@
         display: flex;
         flex-wrap: wrap;
     }
+
     .row.bottomMargin {
         margin-bottom: 12px;
     }
