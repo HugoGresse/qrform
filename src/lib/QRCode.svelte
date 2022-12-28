@@ -31,7 +31,7 @@
                 'X-RapidAPI-Key': import.meta.env.VITE_RAPIDAPI_KEY,
                 'X-RapidAPI-Host': 'qrcode3.p.rapidapi.com'
             },
-            body: `{"data":"https://qrform.fr/f/${id}","style":{"module":{"color":"black","shape":"horizontal_lines"},"inner_eye":{"shape":"lightround"},"outer_eye":{"shape":"lightround", "color":"#018786"},"background":{}},"size":{"width":300,"quiet_zone":4,"error_correction":"M"},"output":{"filename":"qrcode","format":"png"}}`
+            body: `{"data":"https://qrform.fr/f/${id}","style":{"module":{"color":"black","shape":"horizontal_lines"},"inner_eye":{"shape":"lightround"},"outer_eye":{"shape":"lightround", "color":"#018786"},"background":{}},"size":{"width":300,"quiet_zone":2,"error_correction":"M"},"output":{"filename":"qrcode","format":"png"}}`
         }
 
         fetch('https://qrcode3.p.rapidapi.com/qrcode/text', options)
@@ -73,7 +73,10 @@
                 style="width:100%;text-align: center; margin:0 auto; font-family: sans-serif; justify-content: center; align-items: center; align-content: center; display: flex; flex-direction: column;">
                 <h1 style="width:100%;text-align: center; margin:0 auto; font-family: sans-serif;">{formTitle}</h1>
                 <br/>
-                <img src="{qrCode}" width="300" height="300" alt="QRCode"/>
+                <div style="display: flex;flex-direction: column;padding: 8px;justify-content: center;align-items: center;border-radius: 14px;border: 6px solid #333;">
+                    <img src="{qrCode}" width="300" height="300" alt="QRCode"/>
+                    <img src="https://qrform.fr/qrform.svg" width="130"/>
+                </div>
             </div>
         </div>
         <Button color="secondary" on:click={print} touch type="submit"

@@ -6,24 +6,16 @@
     import Icon from '@smui/textfield/icon'
     import Button, { Label } from '@smui/button'
     import CircularProgress from '@smui/circular-progress'
-
-    const STATUS = {
-        LOADING: 0,
-        LOADED: 1,
-        LOAD_ERROR: 2,
-        SENDING: 3,
-        SENT_SUCCESS: 4,
-        SENT_ERROR: 5,
-    }
-
-    const FIELD_FILE_ANY = 1
-    const FIELD_CAMERA = 2
-    const FIELD_EMAIL = 3
-    const FIELD_DOB = 4
-    const FIELD_TEXT = 5
-    const FIELD_CHECKBOX = 6
-
-    const FIELD_FILE = [FIELD_FILE_ANY, FIELD_CAMERA]
+    import { STATUS } from '../utils/Status.js'
+    import {
+        FIELD_CAMERA,
+        FIELD_CHECKBOX,
+        FIELD_DOB,
+        FIELD_EMAIL,
+        FIELD_FILE,
+        FIELD_FILE_ANY,
+        FIELD_TEXT, getFieldDescs
+    } from './FieldTypes.js'
 
     export let id
     let status = STATUS.LOADING
@@ -120,7 +112,7 @@
                            helperLine$style="width: 100%;"
                 >
                     <Icon class="material-icons" slot="leadingIcon">email</Icon>
-                    <HelperText slot="helper">Saissisez votre email</HelperText>
+                    <HelperText slot="helper">{getFieldDescs(field.field_id)}</HelperText>
                 </Textfield>
             {:else if field.field_id === FIELD_TEXT}
                 <Textfield variant="filled" bind:value={values[field.id]} label="{field.label + (field.required?' (requis)' : '')}" type="text"
@@ -128,7 +120,7 @@
                            helperLine$style="width: 100%;"
                 >
                     <Icon class="material-icons" slot="leadingIcon">abc</Icon>
-                    <HelperText slot="helper">Text libre</HelperText>
+                    <HelperText slot="helper">{getFieldDescs(field.field_id)}</HelperText>
                 </Textfield>
             {:else if field.field_id === FIELD_DOB}
                 <Textfield variant="filled" bind:value={values[field.id]} label="{field.label + (field.required?' (requis)' : '')}" type="date"
@@ -136,7 +128,7 @@
                            helperLine$style="width: 100%;"
                 >
                     <Icon class="material-icons" slot="leadingIcon">event</Icon>
-                    <HelperText slot="helper">Date de naissance</HelperText>
+                    <HelperText slot="helper">{getFieldDescs(field.field_id)}</HelperText>
                 </Textfield>
             {:else if field.field_id === FIELD_CHECKBOX}
                 <FormField  align="end">
