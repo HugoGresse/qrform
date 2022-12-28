@@ -49,12 +49,19 @@
             })
             const responseText = await response.text()
             if (response.ok) {
-                status = STATUS.SENT_SUCCESS
+                const responseJson = JSON.parse(responseText)
+                if (responseJson.error) {
+                    status = STATUS.SENT_ERROR
+                    error = "Erreur lors de l'envoie du lien de connexion:\n" + responseJson.error
+                } else {
+                    status = STATUS.SENT_SUCCESS
+                }
             } else {
-                error = "Erreur lors de l'envoie du lien de connexion: <br/>" + responseText
+                error = "Erreur lors de l'envoie du lien de connexion:\n" + responseText
                 status = STATUS.SENT_ERROR
             }
         } catch (catchedError) {
+            console.log(catchedError)
             error = "Erreur lors de l'envoie du lien de connexion"
             status = STATUS.SENT_ERROR
         }
@@ -70,19 +77,19 @@
         <h3>Connectez-vous à votre compte QRForm</h3>
 
         <form method="post">
-            <Textfield variant="filled" bind:value={email} label="Email" type="email"
-                       style="width: 100%;"
-                       input$autocomplete="email"
-                       helperLine$style="width: 100%;"
-            >
-                <Icon class="material-icons" slot="leadingIcon">email</Icon>
-                <HelperText slot="helper">L'email sur lequel vous recevez les données de QRForm. Nous vous enverrons le
-                    lien de connexion directement par email.
-                </HelperText>
-            </Textfield>
-
-
             {#if (status !== STATUS.SENT_SUCCESS)}
+                <Textfield variant="filled" bind:value={email} label="Email" type="email"
+                           style="width: 100%;"
+                           input$autocomplete="email"
+                           helperLine$style="width: 100%;"
+                >
+                    <Icon class="material-icons" slot="leadingIcon">email</Icon>
+                    <HelperText slot="helper">L'email sur lequel vous recevez les données de QRForm. Nous vous enverrons
+                        le
+                        lien de connexion directement par email.
+                    </HelperText>
+                </Textfield>
+
                 <Button color="secondary" disabled="{status === STATUS.SENDING}" on:click={onSubmit} touch type="submit"
                         variant="outlined">
                     <Label>{status === STATUS.SENDING ? "Envoie..." : "Envoyer le lien"}</Label>
@@ -90,6 +97,9 @@
                         <CircularProgress style="height: 24px; width: 24px;" indeterminate/>
                     {/if}
                 </Button>
+                {#if status === STATUS.SENT_ERROR}
+                    <h4>{error}</h4>
+                {/if}
             {:else if status === STATUS.SENT_SUCCESS}
                 <h4>Email de connexion envoyé.</h4>
             {/if}
@@ -104,6 +114,7 @@
     main {
         min-height: 100%;
     }
+
     h4 {
         color: #000;
     }

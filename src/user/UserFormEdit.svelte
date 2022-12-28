@@ -100,7 +100,7 @@
                 label="Titre du formulaire"
                 required="true"
                 type="text"
-                value="{form.title}"
+                bind:value="{form.title}"
                 icon="title"
             />
         </div>
@@ -110,7 +110,7 @@
                 label="Sujet de l'email"
                 required="true"
                 type="text"
-                value="{form.email_title}"
+                bind:value="{form.email_title}"
                 icon="subject"
             />
         </div>
