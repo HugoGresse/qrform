@@ -85,7 +85,14 @@
 
 <main>
     <UserHeader title="Modification du formulaire" backText="Liste des formulaires" forwardText="Voir le formulaire"
-                forwardLink="https://qrform.fr/f/{id}"/>
+                forwardLink="https://qrform.fr/f/{id}">
+        <Button color="secondary" touch
+                variant="outlined"
+                target="_blank" href="https://qrform.fr/qrcode/{id}">
+            <Icon class="material-icons">qr_code_2</Icon>
+            <Label>QR Code</Label>
+        </Button>
+    </UserHeader>
 
     {#if loading}
         <CircularProgress style="height: 24px; width: 24px;" indeterminate/>
@@ -205,6 +212,7 @@
     .bottomRow {
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
     }
 
     section {

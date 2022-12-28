@@ -13,7 +13,6 @@
 
 {#if (backText || forwardText)}
     <div class="back">
-
         {#if backText}
             <Button color="secondary" on:click={() => history.back()} touch
                     variant="outlined">
@@ -21,15 +20,17 @@
                 <Label>{backText}</Label>
             </Button>
         {/if}
-        {#if forwardText}
-            <Button color="secondary" touch
-                    variant="outlined"
-                    target="_blank" href={forwardLink}>
-                <Icon class="material-icons">{forwardIcon}</Icon>
-                <Label>{forwardText}</Label>
-            </Button>
-        {/if}
-
+        <div>
+            {#if forwardText}
+                <Button color="secondary" touch
+                        variant="outlined"
+                        target="_blank" href={forwardLink}>
+                    <Icon class="material-icons">{forwardIcon}</Icon>
+                    <Label>{forwardText}</Label>
+                </Button>
+            {/if}
+            <slot></slot>
+        </div>
     </div>
 {/if}
 <h2>{title}</h2>
@@ -40,5 +41,6 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        flex-wrap: wrap;
     }
 </style>
