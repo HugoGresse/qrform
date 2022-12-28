@@ -17,6 +17,7 @@
     const flipDurationMs = 200
     let loading = false
     let error = null
+    let askRelogin = false
     let form = null
     let initialForm = null
 
@@ -38,6 +39,7 @@
             loading = true
             const results = await loadFormsAction()
             error = results.error
+            askRelogin = results.askRelogin
             loading = false
         }
     }
@@ -67,8 +69,8 @@
     const save = async (form) => {
         loading = true
         error = null
+        askRelogin = false
         form.fields = form.fields.map((f, index) => {
-            console.log("", index)
             f.order = index
             return f
         })
@@ -76,6 +78,7 @@
         loading = false
         if (!results.success) {
             error = results.error
+            askRelogin = results.askRelogin
         }
     }
 
@@ -94,11 +97,8 @@
         </Button>
     </UserHeader>
 
-    {#if loading}
+    {#if (loading && (!form || !form.fields))}
         <CircularProgress style="height: 24px; width: 24px;" indeterminate/>
-    {/if}
-    {#if error}
-        <h2>{error}</h2>
     {/if}
 
     {#if form}
@@ -169,6 +169,17 @@
             {/each}
         </section>
 
+        {#if error}
+            <h2>{error}</h2>
+        {/if}
+
+        {#if askRelogin}
+            <Button color="secondary" touch
+                    variant="outlined" href="/login">
+                <Label>Se re-connecter</Label>
+            </Button>
+        {/if}
+
         <div class="bottomRow">
             <Button color="secondary" on:click={addNewField} touch
                     variant="outlined">
@@ -180,6 +191,9 @@
                     variant="raised">
                 <Icon class="material-icons">save</Icon>
                 <Label>Sauvegarder</Label>
+                {#if loading}
+                    <CircularProgress style="height: 24px; width: 24px;" indeterminate/>
+                {/if}
             </Button>
         </div>
     {/if}

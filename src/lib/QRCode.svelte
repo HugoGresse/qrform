@@ -73,8 +73,10 @@
                 style="width:100%;text-align: center; margin:0 auto; font-family: sans-serif; justify-content: center; align-items: center; align-content: center; display: flex; flex-direction: column;">
                 <h1 style="width:100%;text-align: center; margin:0 auto; font-family: sans-serif;">{formTitle}</h1>
                 <br/>
-                <img src="{qrCode}" width="300" height="300" alt="QRCode"/>
-                <img src="https://qrform.fr/qrform.svg" width="130"/>
+                <div style="display: flex;flex-direction: column;padding: 8px;justify-content: center;align-items: center;border-radius: 14px;border: 6px solid #333;">
+                    <img src="{qrCode}" width="300" height="300" alt="QRCode"/>
+                    <img src="https://qrform.fr/qrform.svg" width="130"/>
+                </div>
             </div>
         </div>
         <Button color="secondary" on:click={print} touch type="submit"

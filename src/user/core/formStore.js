@@ -62,6 +62,7 @@ export const updateFormAction = async (form) => {
 
         return {
             success: false,
+            askRelogin: true,
             error: "Erreur lors de la récupération des fomulaires, reconnectez-vous. " + text
         }
     }
