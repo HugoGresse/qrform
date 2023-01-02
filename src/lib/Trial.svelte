@@ -44,7 +44,7 @@
 
     <p>
         Créer votre premier formulaire gratuitement, vous serez limité à 20 envois de documents.
-        Si vous souhaitez poursuivre l utilisation de votre formulaire, vous devrez souscrire à <a
+        Si vous souhaitez poursuivre l'utilisation de votre formulaire, vous devrez souscrire à <a
         href="https://qrform.fr/#pricing">une offre ici</a>.
     </p>
 
